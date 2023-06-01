@@ -24,13 +24,13 @@ local packages = {
     ["QMovement"] = {
         name = "QMovement.lua",
         description = "Basic movement package",
-        path = "",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QMovement.lua?token=GHSAT0AAAAAACDK5VPB5GZQJIUWNE3SL736ZDY46CA",
         type = "library"
     },
     ["QInstruction"] = {
         name = "QInstruction.lua",
         description = "Allows executing several commands as a string",
-        path = "",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QInstruction.lua?token=GHSAT0AAAAAACDK5VPAWKAIZTSR4BI7PQJIZDY43ZA",
         type = "library"
     }
 }
