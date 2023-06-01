@@ -24,13 +24,13 @@ local packages = {
     ["QMovement"] = {
         name = "QMovement.lua",
         description = "Basic movement package",
-        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/7eb7ba738bea95697234dcab79dc37436d1456bd/src/lib/QMovement.lua?token=GHSAT0AAAAAACDK5VPB5BOCPFMB4ABOJCB4ZDY5ESQ",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QMovement.lua",
         type = "library"
     },
     ["QInstruction"] = {
         name = "QInstruction.lua",
         description = "Allows executing several commands as a string",
-        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/7eb7ba738bea95697234dcab79dc37436d1456bd/src/lib/QInstruction.lua?token=GHSAT0AAAAAACDK5VPAEPYH5RPP74EKUW6YZDY5EEQ",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QInstruction.lua",
         type = "library"
     }
 }
@@ -41,6 +41,8 @@ if not packages[args[2]] then
 end
 
 local function install(package, target_version)
+    target_version = tonumber(target_version) or math.huge
+    
     local response = http and http.get(package.path)
     if not response then
         error("Could not fetch " .. package.name)
@@ -51,14 +53,14 @@ local function install(package, target_version)
         path = "/QLib/packages/"
     end
     
-    if fs.exists(path .. package.name) and target_version then
+    if fs.exists(path .. package.name) then
         local f = io.open(path .. package.name)
         local line = f:read()
         f:close()
         line = string.gsub(line, "[%a%p%s]", "") -- Only leave digits
         
         if tonumber(line) >= target_version then
-            io.write("Latest version of "..package.name.. " already installed\n")
+            io.write("Latest version [".. tonumber(line) .."] of "..package.name.. " already installed\n")
             return
         end
     end
