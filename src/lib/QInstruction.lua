@@ -12,8 +12,8 @@ Public.QInstructionCalls = {
 }
 
 function Public.execute(command)
-    if Public.calls[command] then
-        Public.calls[command]()
+    if Public.QInstructionCalls[command] then
+        Public.QInstructionCalls[command]()
     end
 end
 

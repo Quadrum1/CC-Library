@@ -24,13 +24,13 @@ local packages = {
     ["QMovement"] = {
         name = "QMovement.lua",
         description = "Basic movement package",
-        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QMovement.lua?token=GHSAT0AAAAAACDK5VPB5GZQJIUWNE3SL736ZDY46CA",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/7eb7ba738bea95697234dcab79dc37436d1456bd/src/lib/QMovement.lua?token=GHSAT0AAAAAACDK5VPB5BOCPFMB4ABOJCB4ZDY5ESQ",
         type = "library"
     },
     ["QInstruction"] = {
         name = "QInstruction.lua",
         description = "Allows executing several commands as a string",
-        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QInstruction.lua?token=GHSAT0AAAAAACDK5VPAWKAIZTSR4BI7PQJIZDY43ZA",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/7eb7ba738bea95697234dcab79dc37436d1456bd/src/lib/QInstruction.lua?token=GHSAT0AAAAAACDK5VPAEPYH5RPP74EKUW6YZDY5EEQ",
         type = "library"
     }
 }
@@ -46,10 +46,9 @@ local function install(package, target_version)
         error("Could not fetch " .. package.name)
     end
     
+    local path = "/"
     if package.type == "library" then
-        local path = "/QLib/packages/"
-    else
-        local path = "/"
+        path = "/QLib/packages/"
     end
     
     if fs.exists(path .. package.name) and target_version then
@@ -72,7 +71,7 @@ local function install(package, target_version)
         error("Could not write ".. path .. package.name)
     end
     
-    io.write("Successfully installed " .. package.name)
+    io.write("Successfully installed " .. package.name .."\n")
     return nil
 end
 
