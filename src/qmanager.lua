@@ -58,9 +58,12 @@ local function install(package, target_version)
         line = string.gsub(line, "[%a%p%s]", "") -- Only leave digits
         
         if tonumber(line) >= target_version then
+            io.write("Latest version of "..package.name.. " already installed\n")
             return
         end
     end
+    
+    fs.delete(path .. package.name)
     
     local handle = io.open(path .. package.name, "w")
     if handle then
