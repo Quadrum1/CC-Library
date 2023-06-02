@@ -29,6 +29,7 @@ local function searchOre()
     end
     ores = Navigation.scanSurroundings(Movement, filter)
     for i = 1, #ores do
+        print(textutils.serialise(ores[i].pos))
         if not ore_positions[Navigation.positionIndex(ores[i].pos)] then
             table.insert(ore, ores[i])
         else
