@@ -1,4 +1,4 @@
--- Version: 0
+-- Version: 0.5
 Public = {}
 
 Public.blockStorage = {}
@@ -107,7 +107,8 @@ local function expandNode()
 end
 
 local function findAnyPath(start, goal, diggingAllowed)
-    -- Implements A* Algorithm
+    -- Implements A* Algorithm, refer to Wikipedia
+    
     Calc.goal = goal
     
     Calc.openList = {}
@@ -125,6 +126,7 @@ local function findAnyPath(start, goal, diggingAllowed)
         
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
+            -- Goal reached, calculate taken path
             Calc.currentNode = start
             while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
                 print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
