@@ -72,7 +72,6 @@ function Public.scanSurroundings(Movement, filter)
     
     success, result = turtle.inspectDown()
 
-    pos.y = pos.y - 1
     if success then 
         result.pos = pos
         result.pos.y = result.pos.y - 1
