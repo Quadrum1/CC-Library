@@ -34,8 +34,9 @@ local function main()
    Movement.forward()
    Navigation.scanSurroundings(Movement)
    
-   Movement.forward()
-   Navigation.scanSurroundings(Movement)
+   
+   pos = Movement.position
+   Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
 end
 
 local function ensureDependencies()

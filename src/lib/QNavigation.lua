@@ -5,6 +5,7 @@ Public.blockStorage = {}
 Calc = {}
 Calc.openList = {}
 Calc.closedList = {}
+Calc.allList = {}
 Calc.currentNode = {}
 
 
@@ -108,7 +109,15 @@ local function findAnyPath(start, goal, diggingAllowed)
     Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     while #Calc.openList > 0 do
         Calc.currentNode = table.remove(Calc.openList, 1)
+        Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
+            Calc.currentNode = start
+            while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
+                print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
+                Calc.currentNode = Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)]
+                print("Next: " positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
+                print("---")
+            end
             -- Construct path here, starting at start to goal.
             print("Found a path.")
             return -- FOUND PATH
