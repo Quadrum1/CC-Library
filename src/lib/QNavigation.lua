@@ -3,7 +3,6 @@ Public = {}
 
 Public.blockStorage = {}
 Calc = {}
-Calc.openList = {}
 Calc.closedList = {}
 Calc.allList = {}
 Calc.currentNode = {}
@@ -108,7 +107,7 @@ local function successorLoop(delta)
         
     tentative_g = Calc.currentNode.g + 1
 
-    if Calc.openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
+    if Public.blockStorage[positionIndex(x,y,z)] and tentative_g >= Public.blockStorage[positionIndex(x,y,z)].g then return end
     successor = {}
     successor.x = x
     successor.y = y
@@ -117,8 +116,8 @@ local function successorLoop(delta)
     successor.g = tentative_g
     successor.f = tentative_g + Public.distanceCost(successor, Calc.goal)
     
-    Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
-    Calc.openList[positionIndex(x,y,z)] = successor
+    Public.blockStorage[successor.predecessor].successor = positionIndex(x,y,z)
+    Public.blockStorage[positionIndex(x,y,z)] = successor
     table.insert(Calc.openPositions, positionIndex(x,y,z))
 end
 
@@ -136,13 +135,13 @@ end
 local function removeMin()
     min = math.huge
     for key, pos in pairs(Calc.openPositions) do
-        if Calc.openList[pos].f < min then
-            min = Calc.openList[pos].f
+        if Public.blockStorage[pos].f < min then
+            min = Public.blockStorage[pos].f
         end
     end   
 
     for key, pos in pairs(Calc.openPositions) do
-        if Calc.openList[pos].f == min then
+        if Public.blockStorage[pos].f == min then
             return table.remove(Calc.openPositions, key)
         end
     end 
@@ -160,7 +159,7 @@ local function A_Star_Pathfinder(start, goal, isGoal)
     
     start.g = 0
     start.f = Public.distanceCost(start, Calc.goal)
-    
+
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openPositions > 0 do
         currentPos = removeMin()
@@ -178,7 +177,7 @@ local function A_Star_Pathfinder(start, goal, isGoal)
                     z = Calc.currentNode.z - Public.blockStorage[Calc.currentNode.predecessor].z
                 }
                 table.insert(path, 1, delta_position)
-                Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
+                Calc.currentNode = Public.blockStorage[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
             print("Found a path.")
