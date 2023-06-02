@@ -66,6 +66,8 @@ local function decideWay(delta, startPos)
 end
 
 function Public.planDelta(deltaTable, startPos)
+    if not deltaTable then return {} end
+    if not startPos then return {} end
     set = {}
     while #deltaTable > 0 do
         -- Delta only contains a single vertice != 0
