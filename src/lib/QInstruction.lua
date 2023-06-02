@@ -23,4 +23,55 @@ function Public.executeSet(instructionSet)
     end
 end
 
+
+local function decideWay(delta, startPos)
+    if delta.y == 1 then
+        set.insert("up")
+    end
+    if delta.y == -1 then
+        set.insert("down")
+    end
+    
+    if delta.x == 1 then
+        while startPos.w != 1 do
+            set.insert("right")
+            startPos.w = (startPos.w + 1) % 4
+        end
+        set.insert("forward")
+    end
+    if delta.x == -1 then
+        while startPos.w != 3 do
+            set.insert("right")
+            startPos.w = (startPos.w + 1) % 4
+        end
+        set.insert("forward")
+    end
+    
+    if delta.z == 1 then
+        while startPos.w != 2 do
+            set.insert("right")
+            startPos.w = (startPos.w + 1) % 4
+        end
+        set.insert("forward")
+    end
+    if delta.z == -1 then
+        while startPos.w != 0 do
+            set.insert("right")
+            startPos.w = (startPos.w + 1) % 4
+        end
+        set.insert("forward")
+    end
+    
+    return startPos
+end
+
+function Public.planDelta(deltaTable, startPos)
+    set = {}
+    while #deltaTable > 0 do
+        -- Delta only contains a single vertice != 0
+        delta = table.remove(deltaTable, 1)
+        startPos = decideWay(delta,startPos)
+    end
+end
+
 return Public
