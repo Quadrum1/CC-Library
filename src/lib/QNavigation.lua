@@ -1,4 +1,4 @@
--- Version: 0.7
+-- Version: 0.8
 Public = {}
 
 Public.blockStorage = {}
@@ -105,6 +105,22 @@ local function expandNode()
     end
 end
 
+local function removeMin()
+    min = math.huge
+    for key, pos in pairs(Calc.openPositions) do
+        if Calc.openList[pos].f < min then
+            min = Calc.openList[pos].f
+        end
+    end   
+
+    for key, pos in pairs(Calc.openPositions) do
+        if Calc.openList[pos].f == min then
+            return table.remove(Calc.openPositions, key)
+        end
+    end 
+    
+end
+
 local function findAnyPath(start, goal, diggingAllowed)
     -- Implements A* Algorithm, refer to Wikipedia
     
@@ -116,10 +132,11 @@ local function findAnyPath(start, goal, diggingAllowed)
     Calc.allList = {}
     
     start.g = 0
+    start.f = distanceCost(start, Calc.goal)
     Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openPositions > 0 do
-        currentPos = table.remove(Calc.openPositions, 1)
+        currentPos = removeMin()
         print("At ".. currentPos)
         Calc.currentNode = Calc.openList[currentPos]
         
