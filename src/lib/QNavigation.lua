@@ -78,7 +78,7 @@ local function successorLoop(delta)
     if Public.blockStorage[positionIndex(x,y,z)].solid then return end
     if closedList[positionIndex(x,y,z)] then return end
         
-    tentative_g = Calc.currentNode.cost + 1
+    tentative_g = Calc.currentNode.g + 1
 
     if openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
     successor.predecessor = positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
@@ -110,6 +110,7 @@ local function findAnyPath(start, goal, diggingAllowed)
     Calc.closedList = {}
     Calc.allList = {}
     
+    start.g = 0
     Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     io.write(#Calc.openPositions)
