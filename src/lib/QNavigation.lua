@@ -9,7 +9,7 @@ Calc.currentNode = {}
 
 
 local function positionIndex(x,y,z)
-    return tostring(x) + " " + tostring(y) + " " + tostring(z)
+    return x .. " " .. y .. " " .. z
 end
 
 local function setBlock(x,y,z,solid)
