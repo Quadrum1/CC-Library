@@ -87,6 +87,7 @@ local function successorLoop(delta)
     
     Calc.currentNode.successor = positionIndex(x,y,z)
     Calc.openList[positionIndex(x,y,z)] = successor
+    print("Calc Successor: ".. positionIndex(x,y,z))
 end
 
 local function expandNode()
@@ -115,7 +116,7 @@ local function findAnyPath(start, goal, diggingAllowed)
             while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
                 print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 Calc.currentNode = Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)]
-                print("Next: " positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
+                print("Next: " .. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 print("---")
             end
             -- Construct path here, starting at start to goal.
@@ -126,6 +127,7 @@ local function findAnyPath(start, goal, diggingAllowed)
         
     end
     print("Did not find a path.")
+    print(textutils.serialise(Calc))
 end
 
 function Public.findAnyPath(startPosition, endPosition)
