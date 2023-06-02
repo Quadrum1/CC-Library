@@ -154,22 +154,24 @@ local function findAnyPath(start, goal, diggingAllowed)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
-            --print("Found a path.")
+            print("Found a path.")
             return path
         end
+        -- Find all neighbors
         expandNode()
         Calc.closedList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
     end
 
     print("Did not find a path.")
+    return nil
 end
 
 function Public.findAnyPath(startPosition, endPosition)
-    findAnyPath(startPosition, endPosition, true)
+    return findAnyPath(startPosition, endPosition, true)
 end
 
 function Public.findClearPath(startPosition, endPosition)
-    findAnyPath(startPosition, endPosition, false)
+    return findAnyPath(startPosition, endPosition, false)
 end
 
 return Public
