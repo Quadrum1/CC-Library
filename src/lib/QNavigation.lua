@@ -116,6 +116,7 @@ local function findAnyPath(start, goal, diggingAllowed)
     io.write(#Calc.openList)
     while #Calc.openList > 0 do
         currentPos = table.remove(Calc.openPositions, 1)
+        print("At ".. currentPos)
         Calc.currentNode = table.remove(Calc.openList, currentPos)
         
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
@@ -134,7 +135,6 @@ local function findAnyPath(start, goal, diggingAllowed)
         Calc.closedList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
     end
 
-    print(textutils.serialise(Calc.currentNode))
     print("Did not find a path.")
 end
 
