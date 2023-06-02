@@ -109,7 +109,7 @@ local function successorLoop(delta)
         
     tentative_g = Calc.currentNode.g + 1
 
-    if Calc.openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
+    if Calc.openList[positionIndex(x,y,z)] and tentative_g >= Calc.openList[positionIndex(x,y,z)].g then return end
     successor = {}
     successor.x = x
     successor.y = y
