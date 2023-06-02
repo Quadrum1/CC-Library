@@ -3,6 +3,7 @@ Public = {}
 
 Public.blockStorage = {}
 Calc = {}
+Calc.openList = {}
 Calc.closedList = {}
 Calc.allList = {}
 Calc.currentNode = {}
@@ -107,7 +108,7 @@ local function successorLoop(delta)
         
     tentative_g = Calc.currentNode.g + 1
 
-    if Public.blockStorage[positionIndex(x,y,z)] and tentative_g >= Public.blockStorage[positionIndex(x,y,z)].g then return end
+    if Calc.openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
     successor = {}
     successor.x = x
     successor.y = y
@@ -116,8 +117,10 @@ local function successorLoop(delta)
     successor.g = tentative_g
     successor.f = tentative_g + Public.distanceCost(successor, Calc.goal)
     
-    Public.blockStorage[successor.predecessor].successor = positionIndex(x,y,z)
-    Public.blockStorage[positionIndex(x,y,z)] = successor
+    successor.data = Public.blockStorage[positionIndex(x,y,z)].data
+    
+    Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
+    Calc.openList[positionIndex(x,y,z)] = successor
     table.insert(Calc.openPositions, positionIndex(x,y,z))
 end
 
@@ -135,13 +138,13 @@ end
 local function removeMin()
     min = math.huge
     for key, pos in pairs(Calc.openPositions) do
-        if Public.blockStorage[pos].f < min then
-            min = Public.blockStorage[pos].f
+        if Calc.openList[pos].f < min then
+            min = Calc.openList[pos].f
         end
     end   
 
     for key, pos in pairs(Calc.openPositions) do
-        if Public.blockStorage[pos].f == min then
+        if Calc.openList[pos].f == min then
             return table.remove(Calc.openPositions, key)
         end
     end 
@@ -156,14 +159,16 @@ local function A_Star_Pathfinder(start, goal, isGoal)
     Calc.openPositions = {}
     Calc.closedList = {}
     Calc.allList = {}
-    
+    Calc.openList = {}
     start.g = 0
     start.f = Public.distanceCost(start, Calc.goal)
-
+    
+    Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openPositions > 0 do
         currentPos = removeMin()
-        Calc.currentNode = Public.blockStorage[currentPos]
+
+        Calc.currentNode = Calc.openList[currentPos]
         
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         if isGoal(Calc.currentNode) then
@@ -177,7 +182,7 @@ local function A_Star_Pathfinder(start, goal, isGoal)
                     z = Calc.currentNode.z - Public.blockStorage[Calc.currentNode.predecessor].z
                 }
                 table.insert(path, 1, delta_position)
-                Calc.currentNode = Public.blockStorage[Calc.currentNode.predecessor]
+                Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
             print("Found a path.")
