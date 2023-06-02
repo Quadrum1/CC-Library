@@ -188,7 +188,7 @@ local function A_Star_Pathfinder(start, goal, isGoal)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
-            print("Found a path.")
+            print("Found a path to "..positionIndex(goal.x, goal.y, goal.z))
             return path
         end
         -- Find all neighbors
