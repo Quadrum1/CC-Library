@@ -26,37 +26,37 @@ end
 
 local function decideWay(delta, startPos)
     if delta.y == 1 then
-        table.insert(Calc.set, ("up")
+        table.insert(Calc.set, "up")
     end
     if delta.y == -1 then
-        table.insert(Calc.set, ("down")
+        table.insert(Calc.set, "down")
     end
     
     if delta.x == 1 then
         while startPos.w ~= 1 do
-            table.insert(Calc.set, ("right")
+            table.insert(Calc.set, "right")
             startPos.w = (startPos.w + 1) % 4
         end
-        table.insert(Calc.set, ("forward")
+        table.insert(Calc.set, "forward")
     end
     if delta.x == -1 then
         while startPos.w ~= 3 do
-            table.insert(Calc.set, ("right")
+            table.insert(Calc.set, "right")
             startPos.w = (startPos.w + 1) % 4
         end
-        table.insert(Calc.set, ("forward")
+        table.insert(Calc.set, "forward")
     end
     
     if delta.z == 1 then
         while startPos.w ~= 2 do
-            table.insert(Calc.set, ("right")
+            table.insert(Calc.set, "right")
             startPos.w = (startPos.w + 1) % 4
         end
         table.insert(Calc.set, "forward")
     end
     if delta.z == -1 then
         while startPos.w ~= 0 do
-            table.insert(Calc.set, ("right")
+            table.insert(Calc.set, "right")
             startPos.w = (startPos.w + 1) % 4
         end
         table.insert(Calc.set, "forward")
