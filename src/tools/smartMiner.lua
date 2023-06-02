@@ -29,11 +29,9 @@ local function searchOre()
     end
     ores = Navigation.scanSurroundings(Movement, filter)
     for i = 1, #ores do
-        print(textutils.serialise(ores[i].pos))
-        print(ores[i].pos.z)
         if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
+            print("Put")
             table.insert(ore, ores[i])
-        else
             ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] = true
         end
     end
@@ -49,9 +47,12 @@ local function main()
             cost = Navigation.distanceCost(pos, ore[i].pos)
             if cost < minCost then
                 minCost = cost
-                closestOre = ore[i]
+                closestOre = i
             end
         end
+        closestOre = table.remove(ore, i)
+        print(textutils.serialise(closestOre.pos))
+        
         Navigation.setAir(pos.x, pos.y, pos.z)
         Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
         Instruction.executeSet(Instruction.planDelta(path))
@@ -60,7 +61,6 @@ local function main()
    
    pos = Movement.position
    path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
-   print(textutils.serialise(path))
    Instruction.executeSet(Instruction.planDelta(path))
 end
 

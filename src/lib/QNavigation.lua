@@ -154,6 +154,9 @@ end
 local function A_Star_Pathfinder(start, goal, isGoal)
     -- Implements A* Algorithm, refer to Wikipedia
     
+    Public.blockStorage[positionIndex(start.x, start.y, start.z)].solid = false
+    Public.blockStorage[positionIndex(goal.x, goal.y, goal.z)].solid = false
+    
     Calc.goal = goal
     
     Calc.openPositions = {}
