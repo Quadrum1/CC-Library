@@ -81,11 +81,16 @@ local function successorLoop(delta)
     tentative_g = Calc.currentNode.g + 1
 
     if Calc.openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
+    successor = {}
+    successor.x = x
+    successor.y = y
+    successor.z = z
     successor.predecessor = positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
     successor.g = tentative_g
     successor.f = tentative_g + distanceCost(successor, goalPosition)
     
-    Calc.currentNode.successor = positionIndex(x,y,z)
+    Calc.currentNode
+    Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
     Calc.openList[positionIndex(x,y,z)] = successor
     table.insert(Calc.openPositions, positionIndex(x,y,z))
     print("Calc Successor: ".. positionIndex(x,y,z))
@@ -113,7 +118,6 @@ local function findAnyPath(start, goal, diggingAllowed)
     start.g = 0
     Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
-    io.write(#Calc.openPositions)
     while #Calc.openPositions > 0 do
         currentPos = table.remove(Calc.openPositions, 1)
         print("At ".. currentPos)
