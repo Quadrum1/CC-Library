@@ -81,12 +81,14 @@ local function successorLoop(delta)
     tentative_g = Calc.currentNode.cost + 1
 
     if openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
-    successor.predecessor = positionIndex(x,y,z)
+    successor.predecessor = positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
     successor.g = tentative_g
     successor.f = tentative_g + distanceCost(successor, goalPosition)
     
     Calc.currentNode.successor = positionIndex(x,y,z)
+    Calc.insert()
     Calc.openList[positionIndex(x,y,z)] = successor
+    table.insert(Calc.openPositions, positionIndex(x,y,z))
     print("Calc Successor: ".. positionIndex(x,y,z))
 end
 
@@ -105,11 +107,16 @@ local function findAnyPath(start, goal, diggingAllowed)
     -- Implements A* Algorithm
     
     Calc.openList = {}
+    Calc.openPositions = {}
     Calc.closedList = {}
+    Calc.allList = {}
     
     Calc.openList[positionIndex(start.x,start.y,start.z)] = start
+    table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openList > 0 do
-        Calc.currentNode = table.remove(Calc.openList, 1)
+        currentPos = table.remove(Calc.openPositions, 1)
+        Calc.currentNode = table.remove(Calc.openList, currentPos)
+        
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
             Calc.currentNode = start
@@ -124,7 +131,6 @@ local function findAnyPath(start, goal, diggingAllowed)
             return -- FOUND PATH
         end
         Calc.closedList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
-        
     end
     print("Did not find a path.")
     print(textutils.serialise(Calc))
