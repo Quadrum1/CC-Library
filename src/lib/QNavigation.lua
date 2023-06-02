@@ -127,7 +127,7 @@ local function findAnyPath(start, goal, diggingAllowed)
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
             -- Goal reached, calculate taken path
             Calc.currentNode = start
-            while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
+            while Calc.currentNode and not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
                 print("Path: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 Calc.currentNode = Calc.openList[Calc.currentNode.successor]
                 print("---")
