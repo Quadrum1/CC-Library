@@ -198,9 +198,9 @@ local function A_Star_Pathfinder(start, goal, isGoal)
 end
 
 function Public.findClearPath(startBlock, endPosition, isGoal)
-    -- Make sure to 
+    -- Make sure to define this
     if not isGoal then
-        local isGoal = function (block)
+        isGoal = function (block)
             return (block.x == endPosition.x and block.y == endPosition.y and block.z == endPosition.z)
         end 
     end
