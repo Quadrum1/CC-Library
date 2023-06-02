@@ -30,10 +30,11 @@ local function searchOre()
     ores = Navigation.scanSurroundings(Movement, filter)
     for i = 1, #ores do
         print(textutils.serialise(ores[i].pos))
-        if not ore_positions[Navigation.positionIndex(ores[i].pos)] then
+        print(ores[i].pos.z)
+        if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
             table.insert(ore, ores[i])
         else
-            ore_positions[Navigation.positionIndex(ores[i].pos)] = true
+            ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] = true
         end
     end
 end
@@ -45,7 +46,7 @@ local function main()
         closestOre = nil
         pos = Movement.position
         for i = 1, #ore do
-            cost = distanceCost(pos, ore[i].pos)
+            cost = Navigation.distanceCost(pos, ore[i].pos)
             if cost < minCost then
                 minCost = cost
                 closestOre = ore[i]
