@@ -32,6 +32,12 @@ local packages = {
         description = "Allows executing several commands as a string",
         path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QInstruction.lua",
         type = "library"
+    },
+    ["QNavigation"] = {
+        name = "QInstruction.lua",
+        description = "Allows navigation of the world",
+        path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QNavigation.lua",
+        type = "library"
     }
 }
 

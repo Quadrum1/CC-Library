@@ -1,3 +1,4 @@
+-- Version: 0
 Public = {}
 
 Public.blockStorage = {}
@@ -52,6 +53,9 @@ function Public.scanSurroundings(Movement)
     else
         Public.setAir(pos.x, pos.y, pos.z)
     end
+    
+    pos = Movement.position
+    Public.setAir(pos.x, pos.y, pos.z)
 end
 
 local function distanceCost(position1, position2)
