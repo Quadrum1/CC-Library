@@ -128,7 +128,7 @@ local function findAnyPath(start, goal, diggingAllowed)
             Calc.currentNode = start
             while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
                 print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
-                Calc.currentNode = Calc.openList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)]
+                Calc.currentNode = Calc.openList[Calc.currentNode.successor]
                 print("Next: " .. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 print("---")
             end
