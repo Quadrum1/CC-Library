@@ -56,7 +56,7 @@ local function main()
         local isGoal = function (block)
             return (block.x == closestOre.pos.x and block.y == closestOre.pos.y and block.z == closestOre.pos.z)
         end
-        Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.x, y=closestOre.y, z=closestOre.z})
+        Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
         Instruction.executeSet(Instruction.planDelta(path))
         searchOre()
     end 
