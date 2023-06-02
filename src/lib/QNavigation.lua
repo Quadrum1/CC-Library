@@ -113,8 +113,8 @@ local function findAnyPath(start, goal, diggingAllowed)
     
     Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
-    io.write(#Calc.openList)
-    while #Calc.openList > 0 do
+    io.write(#Calc.openPositions)
+    while #Calc.openPositions > 0 do
         currentPos = table.remove(Calc.openPositions, 1)
         print("At ".. currentPos)
         Calc.currentNode = table.remove(Calc.openList, currentPos)

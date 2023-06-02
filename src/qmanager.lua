@@ -71,7 +71,7 @@ local function install(package, target_version)
             end
         end
     end
-    
+    fs.delete(path .. package.name)
     local handle = io.open(path .. package.name, "w")
     if handle then
         handle:write(response.readAll())
