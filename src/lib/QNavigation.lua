@@ -56,30 +56,32 @@ function Public.scanSurroundings(Movement, filter)
         Movement.left()
     end
     
-    success, result = turtle.inspectUp()
     pos = Movement.position
-    pos.y = pos.y + 1
+    
+    success, result = turtle.inspectUp()
     if success then 
         result.pos = pos
+        result.pos.y = result.pos.y + 1
         if filter(result) then
             table.insert(resultStorage, result)
         end
-        Public.setSolid(pos.x, pos.y, pos.z)
+        Public.setSolid(pos.x, pos.y + 1, pos.z)
     else 
-        Public.setAir(pos.x, pos.y, pos.z)
+        Public.setAir(pos.x, pos.y + 1, pos.z)
     end
     
     success, result = turtle.inspectDown()
-    pos = Movement.position
+
     pos.y = pos.y - 1
     if success then 
         result.pos = pos
+        result.pos.y = result.pos.y - 1
         if filter(result) then
             table.insert(resultStorage, result)
         end
-        Public.setSolid(pos.x, pos.y, pos.z)
+        Public.setSolid(pos.x, pos.y - 1, pos.z)
     else 
-        Public.setAir(pos.x, pos.y, pos.z)
+        Public.setAir(pos.x, pos.y - 1, pos.z)
     end
     
     return resultStorage

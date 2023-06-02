@@ -31,6 +31,7 @@ local function searchOre()
     for i = 1, #ores do
         if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
             table.insert(ore, ores[i])
+            print(textutils.serialise(ores[i].pos))
             ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] = true
         end
     end
@@ -54,9 +55,10 @@ local function main()
         Navigation.setAir(pos.x, pos.y, pos.z)
         path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
         print(textutils.serialise(path))
-        instructions = Instruction.planDelta(path)
+        instructions = Instruction.planDelta(path, pos)
         print(textutils.serialise(instructions))
         Instruction.executeSet(instructions)
+        Navigation.setAir(closestOre.pos.x, closestOre.pos.y, closestOre.pos.z)
         searchOre()
     end 
    
