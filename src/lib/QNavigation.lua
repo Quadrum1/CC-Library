@@ -7,7 +7,7 @@ Calc.openList = {}
 Calc.closedList = {}
 Calc.allList = {}
 Calc.currentNode = {}
-
+Calc.goal = {}
 
 local function positionIndex(x,y,z)
     return x .. " " .. y .. " " .. z
@@ -87,9 +87,8 @@ local function successorLoop(delta)
     successor.z = z
     successor.predecessor = positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
     successor.g = tentative_g
-    successor.f = tentative_g + distanceCost(successor, goalPosition)
+    successor.f = tentative_g + distanceCost(successor, Calc.goal)
     
-    Calc.currentNode
     Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
     Calc.openList[positionIndex(x,y,z)] = successor
     table.insert(Calc.openPositions, positionIndex(x,y,z))
@@ -109,6 +108,7 @@ end
 
 local function findAnyPath(start, goal, diggingAllowed)
     -- Implements A* Algorithm
+    Calc.goal = goal
     
     Calc.openList = {}
     Calc.openPositions = {}
