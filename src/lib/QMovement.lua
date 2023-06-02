@@ -8,50 +8,43 @@ Public.position = {
     z = 0
 }
 
+function Public.getForward(modifier)
+    if not modifier then modifier = 1 end
+    local w = Public.position.w
+    if w == 0 then --north
+        return {x = Public.position.x, y = Public.position.y, z = Public.position.z - modifier}
+    end
+    if w == 1 then --east
+        return {x = Public.position.x + modifier, y = Public.position.y, z = Public.position.z}
+    end
+    if w == 2 then --south
+        return {x = Public.position.x, y = Public.position.y, z = Public.position.z + modifier}
+    end
+    if w == 3 then --west
+        return {x = Public.position.x - modifier, y = Public.position.y, z = Public.position.z}
+    end
+end
+
+function Public.getBackwards()
+    return Public.getForward(-1)
+end
+
 function Public.forward()
     while not turtle.forward() do
         turtle.dig()
     end
-    
-    local w = Public.position.w
-    if w == 0 then --north
-        Public.position.z = Public.position.z - 1
-        return
-    end
-    if w == 1 then --east
-        Public.position.x = Public.position.x + 1
-        return
-    end
-    if w == 2 then --south
-        Public.position.z = Public.position.z + 1
-        return
-    end
-    if w == 3 then --west
-        Public.position.x = Public.position.x - 1
-        return
-    end
+    newPos = Public.getForward(1)
+    Public.position.x = newPos.x
+    Public.position.y = newPos.y
+    Public.position.z = newPos.z
 end
 
 function Public.backwards()
     turtle.back()
-    
-    local w = Public.position.w
-    if w == 0 then --north
-        Public.position.z = Public.position.z + 1
-        return
-    end
-    if w == 1 then --east
-        Public.position.x = Public.position.x - 1
-        return
-    end
-    if w == 2 then --south
-        Public.position.z = Public.position.z - 1
-        return
-    end
-    if w == 3 then --west
-        Public.position.x = Public.position.x + 1
-        return
-    end
+    newPos = Public.getBackwards()
+    Public.position.x = newPos.x
+    Public.position.y = newPos.y
+    Public.position.z = newPos.z
 end
 
 function Public.left()
