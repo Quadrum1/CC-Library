@@ -1,4 +1,4 @@
--- Version: 0.9
+-- Version: 1.0
 Public = {}
 
 Public.blockStorage = {}
@@ -137,19 +137,25 @@ local function findAnyPath(start, goal, diggingAllowed)
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openPositions > 0 do
         currentPos = removeMin()
-        print("At ".. currentPos)
         Calc.currentNode = Calc.openList[currentPos]
         
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
             -- Goal reached, calculate taken path
-            while Calc.currentNode and not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
-                io.write("<-".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
+            path = {}
+            while Calc.currentNode and not (Calc.currentNode.x == start.x and Calc.currentNode.y == start.y and Calc.currentNode.z == start.z) do
+                -- Calc path to Calc.currentNode from Calc.currentNode.predecessor
+                delta_position = {
+                    x = Calc.openList[Calc.currentNode.predecessor].x - Calc.currentNode.x,
+                    y = Calc.openList[Calc.currentNode.predecessor].y - Calc.currentNode.y,
+                    z = Calc.openList[Calc.currentNode.predecessor].z - Calc.currentNode.z
+                }
+                table.insert(path, 1, delta_position)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
-            print("Found a path.")
-            return -- FOUND PATH
+            --print("Found a path.")
+            return path
         end
         expandNode()
         Calc.closedList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
