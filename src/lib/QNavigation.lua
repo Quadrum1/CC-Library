@@ -7,8 +7,13 @@ Calc.openList = {}
 Calc.closedList = {}
 Calc.currentNode = {}
 
+
+local function positionIndex(x,y,z)
+    return tostring(x) + " " + tostring(y) + " " + tostring(z)
+end
+
 local function setBlock(x,y,z,solid)
-    Public.blockStorage[x + " " + y + " " + z] = {
+    Public.blockStorage[positionIndex(x,y,z)] = {
         x = x,
         y = y,
         z = z,
@@ -68,19 +73,19 @@ local function successorLoop(delta)
     y = Calc.currentNode.y + delta[2]
     z = Calc.currentNode.z + delta[3]
     
-    if not Public.blockStorage[x + " " + y + " " + z] then return end
-    if Public.blockStorage[x + " " + y + " " + z].solid then return end
-    if closedList[x + " " + y + " " + z] then return end
+    if not Public.blockStorage[positionIndex(x,y,z)] then return end
+    if Public.blockStorage[positionIndex(x,y,z)].solid then return end
+    if closedList[positionIndex(x,y,z)] then return end
         
     tentative_g = Calc.currentNode.cost + 1
 
-    if openList[x + " " + y + " " + z] and tentative_g >= openList[x + " " + y + " " + z].g then return end
-    successor.predecessor = {x + " " + y + " " + z}
+    if openList[positionIndex(x,y,z)] and tentative_g >= openList[positionIndex(x,y,z)].g then return end
+    successor.predecessor = positionIndex(x,y,z)
     successor.g = tentative_g
     successor.f = tentative_g + distanceCost(successor, goalPosition)
     
-    Calc.currentNode.successor = successor
-    Calc.openList[x + " " + y + " " + z] = successor
+    Calc.currentNode.successor = positionIndex(x,y,z)
+    Calc.openList[positionIndex(x,y,z)] = successor
 end
 
 local function expandNode()
@@ -97,7 +102,10 @@ end
 local function findAnyPath(start, goal, diggingAllowed)
     -- Implements A* Algorithm
     
-    Calc.openList[start.x + " " + start.y + " " + start.z] = start
+    Calc.openList = {}
+    Calc.closedList = {}
+    
+    Calc.openList[positionIndex(start.x,start.y,start.z)] = start
     while #Calc.openList > 0 do
         Calc.currentNode = table.remove(Calc.openList, 1)
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
@@ -105,7 +113,7 @@ local function findAnyPath(start, goal, diggingAllowed)
             print("Found a path.")
             return -- FOUND PATH
         end
-        Calc.closedList[currentNode.x + " " +currentNode.y + " " + currentNode.z] = Calc.currentNode
+        Calc.closedList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         
     end
     print("Did not find a path.")

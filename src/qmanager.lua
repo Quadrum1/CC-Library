@@ -34,7 +34,7 @@ local packages = {
         type = "library"
     },
     ["QNavigation"] = {
-        name = "QInstruction.lua",
+        name = "QNavigation.lua",
         description = "Allows navigation of the world",
         path = "https://raw.githubusercontent.com/Quadrum1/CC-Library/main/src/lib/QNavigation.lua",
         type = "library"
@@ -64,14 +64,13 @@ local function install(package, target_version)
         local line = f:read()
         f:close()
         line = string.gsub(line, "[%a%p%s]", "") -- Only leave digits
-        
-        if tonumber(line) >= target_version then
-            io.write("Latest version [".. tonumber(line) .."] of "..package.name.. " already installed\n")
-            return
+        if tonumber(line) then
+            if tonumber(line) >= target_version then
+                io.write("Latest version [".. tonumber(line) .."] of "..package.name.. " already installed\n")
+                return
+            end
         end
     end
-    
-    fs.delete(path .. package.name)
     
     local handle = io.open(path .. package.name, "w")
     if handle then
