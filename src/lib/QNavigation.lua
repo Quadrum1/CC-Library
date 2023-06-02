@@ -128,9 +128,8 @@ local function findAnyPath(start, goal, diggingAllowed)
             -- Goal reached, calculate taken path
             Calc.currentNode = start
             while Calc.currentNode and not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
-                print("Path: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
+                io.write("->".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 Calc.currentNode = Calc.openList[Calc.currentNode.successor]
-                print("---")
             end
             -- Construct path here, starting at start to goal.
             print("Found a path.")
