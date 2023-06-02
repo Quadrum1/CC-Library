@@ -34,6 +34,10 @@ end
 
 
 function Public.scanSurroundings(Movement, filter)
+    if not filter then
+        local filter = function (a) false end
+    end
+    
     resultStorage = {}
     for i = 1, 4 do
         success, result = turtle.inspect()
@@ -43,49 +47,23 @@ function Public.scanSurroundings(Movement, filter)
             if filter(result) then
                 table.insert(resultStorage, result)
             end
-        end
-        Movement.left()
-    end
-    
-    success, result = turtle.inspectUp()
-    pos = Movement.position
-    pos.y = pos.y + 1
-    if success then 
-        result.pos = pos
-        if filter(result) then
-            table.insert(resultStorage, result)
-        end
-    end
-    
-    success, result = turtle.inspectDown()
-    pos = Movement.position
-    pos.y = pos.y - 1
-    if success then 
-        result.pos = pos
-        if filter(result) then
-            table.insert(resultStorage, result)
-        end
-    end
-    return resultStorage
-end
-
-function Public.basicScan(Movement)
-    for i = 1, 4 do
-        success, result = turtle.inspect()
-        pos = Movement.getForward()
-        if success then 
             Public.setSolid(pos.x, pos.y, pos.z)
-        else
+        else 
             Public.setAir(pos.x, pos.y, pos.z)
         end
         Movement.left()
     end
+    
     success, result = turtle.inspectUp()
     pos = Movement.position
     pos.y = pos.y + 1
     if success then 
+        result.pos = pos
+        if filter(result) then
+            table.insert(resultStorage, result)
+        end
         Public.setSolid(pos.x, pos.y, pos.z)
-    else
+    else 
         Public.setAir(pos.x, pos.y, pos.z)
     end
     
@@ -93,10 +71,20 @@ function Public.basicScan(Movement)
     pos = Movement.position
     pos.y = pos.y - 1
     if success then 
+        result.pos = pos
+        if filter(result) then
+            table.insert(resultStorage, result)
+        end
         Public.setSolid(pos.x, pos.y, pos.z)
-    else
+    else 
         Public.setAir(pos.x, pos.y, pos.z)
     end
+    
+    return resultStorage
+end
+
+function Public.basicScan(Movement)
+    Public.scanSurroundings(Movement)
     
     pos = Movement.position
     Public.setAir(pos.x, pos.y, pos.z)
