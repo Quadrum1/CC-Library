@@ -121,34 +121,33 @@ local function removeMin()
     
 end
 
-local function findAnyPath(start, goal, diggingAllowed)
+local function A_Star_Pathfinder(start, goal, isGoal)
     -- Implements A* Algorithm, refer to Wikipedia
     
     Calc.goal = goal
     
-    Calc.openList = {}
     Calc.openPositions = {}
     Calc.closedList = {}
     Calc.allList = {}
     
     start.g = 0
     start.f = distanceCost(start, Calc.goal)
-    Calc.openList[positionIndex(start.x,start.y,start.z)] = start
+    
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openPositions > 0 do
         currentPos = removeMin()
-        Calc.currentNode = Calc.openList[currentPos]
+        Calc.currentNode = Public.blockStorage[currentPos]
         
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
-        if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
+        if isGoal(Calc.currentNode) then
             -- Goal reached, calculate taken path
             path = {}
             while Calc.currentNode and not (Calc.currentNode.x == start.x and Calc.currentNode.y == start.y and Calc.currentNode.z == start.z) do
                 -- Calc path to Calc.currentNode from Calc.currentNode.predecessor
                 delta_position = {
-                    x = Calc.openList[Calc.currentNode.predecessor].x - Calc.currentNode.x,
-                    y = Calc.openList[Calc.currentNode.predecessor].y - Calc.currentNode.y,
-                    z = Calc.openList[Calc.currentNode.predecessor].z - Calc.currentNode.z
+                    x = Calc.currentNode.x - Public.blockStorage[Calc.currentNode.predecessor].x,
+                    y = Calc.currentNode.y - Public.blockStorage[Calc.currentNode.predecessor].y,
+                    z = Calc.currentNode.z - Public.blockStorage[Calc.currentNode.predecessor].z
                 }
                 table.insert(path, 1, delta_position)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
@@ -166,12 +165,16 @@ local function findAnyPath(start, goal, diggingAllowed)
     return nil
 end
 
-function Public.findAnyPath(startPosition, endPosition)
-    return findAnyPath(startPosition, endPosition, true)
-end
-
-function Public.findClearPath(startPosition, endPosition)
-    return findAnyPath(startPosition, endPosition, false)
+function Public.findClearPath(startBlock, endPosition, isGoal)
+    -- Make sure to 
+    if not isGoal then
+        local isGoal = function (block)
+            return (block.x == endPosition.x and block.y == endPosition.y and block.z == endPosition.z)
+        end 
+    end
+    -- Can define more in-depth function here to allow multi-targetting
+    -- For example, can set end position as nearest ore block, or define goal as any ore block
+    return A_Star_Pathfinder(startPosition, endPosition, isGoal)
 end
 
 return Public

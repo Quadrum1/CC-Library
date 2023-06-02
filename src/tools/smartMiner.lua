@@ -38,6 +38,7 @@ local function main()
    pos = Movement.position
    path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
    print(textutils.serialise(path))
+   Instruction.executeSet(Instruction.planDelta(path))
    
    if not (Movement.position.x == 0 and Movement.position.y == 0 and Movement.position.z == 0) then
     print("Manual adjustment taken.")
