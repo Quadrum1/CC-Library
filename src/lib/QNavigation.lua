@@ -43,7 +43,7 @@ function Public.scanSurroundings(Movement, filter)
     resultStorage = {}
     for i = 1, 4 do
         success, result = turtle.inspect()
-        pos = Movement.getForward()
+        local pos = Movement.getForward()
         if success then 
             result.pos = pos
             if filter(result) then
@@ -56,7 +56,7 @@ function Public.scanSurroundings(Movement, filter)
         Movement.left()
     end
     
-    pos = Movement.position
+    local pos = Movement.position
     
     success, result = turtle.inspectUp()
     if success then 
