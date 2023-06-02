@@ -1,4 +1,4 @@
--- Version: 0.8
+-- Version: 0.9
 Public = {}
 
 Public.blockStorage = {}
@@ -143,10 +143,9 @@ local function findAnyPath(start, goal, diggingAllowed)
         Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
             -- Goal reached, calculate taken path
-            Calc.currentNode = start
             while Calc.currentNode and not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
-                io.write("->".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
-                Calc.currentNode = Calc.openList[Calc.currentNode.successor]
+                io.write("<-".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
+                Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
             print("Found a path.")
