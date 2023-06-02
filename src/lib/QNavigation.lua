@@ -1,4 +1,4 @@
--- Version: 0.5
+-- Version: 0.6
 Public = {}
 
 Public.blockStorage = {}
@@ -92,7 +92,6 @@ local function successorLoop(delta)
     Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
     Calc.openList[positionIndex(x,y,z)] = successor
     table.insert(Calc.openPositions, positionIndex(x,y,z))
-    print("Calc Successor: ".. positionIndex(x,y,z))
 end
 
 local function expandNode()
@@ -129,9 +128,8 @@ local function findAnyPath(start, goal, diggingAllowed)
             -- Goal reached, calculate taken path
             Calc.currentNode = start
             while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
-                print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
+                print("Path: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 Calc.currentNode = Calc.openList[Calc.currentNode.successor]
-                print("Next: " .. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 print("---")
             end
             -- Construct path here, starting at start to goal.
