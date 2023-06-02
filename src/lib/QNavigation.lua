@@ -35,7 +35,9 @@ end
 
 function Public.scanSurroundings(Movement, filter)
     if not filter then
-        local filter = function (a) false end
+        local filter = function (a) 
+            return false
+        end
     end
     
     resultStorage = {}
