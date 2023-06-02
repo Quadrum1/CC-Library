@@ -113,9 +113,9 @@ local function findAnyPath(start, goal, diggingAllowed)
         if Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z then
             Calc.currentNode = start
             while not (Calc.currentNode.x == goal.x and Calc.currentNode.y == goal.y and Calc.currentNode.z == goal.z) do
-                print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
+                print("Current: ".. positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 Calc.currentNode = Calc.allList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)]
-                print("Next: " positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
+                print("Next: " positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z))
                 print("---")
             end
             -- Construct path here, starting at start to goal.
