@@ -9,16 +9,17 @@ Calc.allList = {}
 Calc.currentNode = {}
 Calc.goal = {}
 
-local function positionIndex(x,y,z)
+function positionIndex(x,y,z)
     return x .. " " .. y .. " " .. z
 end
 
-local function setBlock(x,y,z,solid)
+local function setBlock(x,y,z,solid, data)
     Public.blockStorage[positionIndex(x,y,z)] = {
         x = x,
         y = y,
         z = z,
         solid = solid
+        data = data
     }
 end
 
@@ -31,7 +32,44 @@ function Public.setAir(x,y,z)
     setBlock(x,y,z,false)
 end
 
-function Public.scanSurroundings(Movement)
+
+function Public.scanSurroundings(Movement, filter)
+    resultStorage = {}
+    for i = 1, 4 do
+        success, result = turtle.inspect()
+        pos = Movement.getForward()
+        if success then 
+            result.pos = pos
+            if filter(result) then
+                table.insert(resultStorage, result)
+            end
+        end
+        Movement.left()
+    end
+    
+    success, result = turtle.inspectUp()
+    pos = Movement.position
+    pos.y = pos.y + 1
+    if success then 
+        result.pos = pos
+        if filter(result) then
+            table.insert(resultStorage, result)
+        end
+    end
+    
+    success, result = turtle.inspectDown()
+    pos = Movement.position
+    pos.y = pos.y - 1
+    if success then 
+        result.pos = pos
+        if filter(result) then
+            table.insert(resultStorage, result)
+        end
+    end
+    return resultStorage
+end
+
+function Public.basicScan(Movement)
     for i = 1, 4 do
         success, result = turtle.inspect()
         pos = Movement.getForward()
@@ -42,18 +80,18 @@ function Public.scanSurroundings(Movement)
         end
         Movement.left()
     end
-    success, result = turtle.inspect()
+    success, result = turtle.inspectUp()
     pos = Movement.position
-    pos.z = pos.z + 1
+    pos.y = pos.y + 1
     if success then 
         Public.setSolid(pos.x, pos.y, pos.z)
     else
         Public.setAir(pos.x, pos.y, pos.z)
     end
     
-    success, result = turtle.inspect()
+    success, result = turtle.inspectDown()
     pos = Movement.position
-    pos.z = pos.z - 1
+    pos.y = pos.y - 1
     if success then 
         Public.setSolid(pos.x, pos.y, pos.z)
     else
@@ -64,7 +102,7 @@ function Public.scanSurroundings(Movement)
     Public.setAir(pos.x, pos.y, pos.z)
 end
 
-local function distanceCost(position1, position2)
+function Public.distanceCost(position1, position2)
     return math.abs(position1.x - position2.x) + math.abs(position1.y - position2.y) + math.abs(position1.z - position2.z)
 end
 
@@ -87,7 +125,7 @@ local function successorLoop(delta)
     successor.z = z
     successor.predecessor = positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)
     successor.g = tentative_g
-    successor.f = tentative_g + distanceCost(successor, Calc.goal)
+    successor.f = tentative_g + Public.distanceCost(successor, Calc.goal)
     
     Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
     Calc.openList[positionIndex(x,y,z)] = successor
@@ -131,7 +169,7 @@ local function A_Star_Pathfinder(start, goal, isGoal)
     Calc.allList = {}
     
     start.g = 0
-    start.f = distanceCost(start, Calc.goal)
+    start.f = Public.distanceCost(start, Calc.goal)
     
     table.insert(Calc.openPositions, positionIndex(start.x,start.y,start.z))
     while #Calc.openPositions > 0 do
@@ -177,4 +215,6 @@ function Public.findClearPath(startBlock, endPosition, isGoal)
     return A_Star_Pathfinder(startPosition, endPosition, isGoal)
 end
 
+
+Public.positionIndex = positionIndex
 return Public
