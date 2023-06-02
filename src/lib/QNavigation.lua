@@ -18,7 +18,7 @@ local function setBlock(x,y,z,solid, data)
         x = x,
         y = y,
         z = z,
-        solid = solid
+        solid = solid,
         data = data
     }
 end
