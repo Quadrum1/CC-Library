@@ -53,7 +53,10 @@ local function main()
         
         Navigation.setAir(pos.x, pos.y, pos.z)
         path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
-        Instruction.executeSet(Instruction.planDelta(path))
+        print(textutils.serialise(path))
+        instructions = Instruction.planDelta(path)
+        print(textutils.serialise(instructions))
+        Instruction.executeSet(instructions)
         searchOre()
     end 
    
