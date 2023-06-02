@@ -3,7 +3,13 @@ ore = {}
 ore_positions = {}
 
 
+local function ensureDependencies()
+    shell.run("qmanager install QMovement")
+    shell.run("qmanager install QInstruction")
+    shell.run("qmanager install QNavigation")
+end
 ensureDependencies()
+
 Movement = require("QLib/packages/QMovement")
 Instruction = require("QLib/packages/QInstruction")
 Navigation = require("QLib/packages/QNavigation")
@@ -59,9 +65,4 @@ local function main()
    Instruction.executeSet(Instruction.planDelta(path))
 end
 
-local function ensureDependencies()
-    shell.run("qmanager install QMovement")
-    shell.run("qmanager install QInstruction")
-    shell.run("qmanager install QNavigation")
-end
 main()

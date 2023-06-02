@@ -33,14 +33,14 @@ local function decideWay(delta, startPos)
     end
     
     if delta.x == 1 then
-        while startPos.w != 1 do
+        while startPos.w ~= 1 do
             set.insert("right")
             startPos.w = (startPos.w + 1) % 4
         end
         set.insert("forward")
     end
     if delta.x == -1 then
-        while startPos.w != 3 do
+        while startPos.w ~= 3 do
             set.insert("right")
             startPos.w = (startPos.w + 1) % 4
         end
@@ -48,14 +48,14 @@ local function decideWay(delta, startPos)
     end
     
     if delta.z == 1 then
-        while startPos.w != 2 do
+        while startPos.w ~= 2 do
             set.insert("right")
             startPos.w = (startPos.w + 1) % 4
         end
         set.insert("forward")
     end
     if delta.z == -1 then
-        while startPos.w != 0 do
+        while startPos.w ~= 0 do
             set.insert("right")
             startPos.w = (startPos.w + 1) % 4
         end
