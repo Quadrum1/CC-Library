@@ -37,6 +37,11 @@ local function main()
    
    pos = Movement.position
    Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
+   
+   if not (Movement.position.x == 0 and Movement.position.y == 0 and Movement.position.z == 0) then
+    Movement.forward()
+    Movement.left()
+   end
 end
 
 local function ensureDependencies()
