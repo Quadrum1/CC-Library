@@ -1,6 +1,10 @@
 -- Version: 0
 local Public = {}
 
+
+
+-- Refactor: Use vector.new() ???
+-- Limitation: Can only store 3 values (x,y,z), would need rotation seperately
 Public.position = {
     w = 0, -- Orientation
     x = 0,

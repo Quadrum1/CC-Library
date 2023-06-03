@@ -25,7 +25,10 @@ local function searchOre()
     local filter = function (result) -- Checks for ore
         return result.tags["c:ores"]
     end
-    ores, blocks, blockKeys = Navigation.scanSurroundings(Movement, filter)
+    print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
+    ores, blocks, blockKeys = Navigation.scanSurroundings(Movement, filter) -- modifies location???
+    print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
+    
     for i = 1, #ores do
         print(textutils.serialise(ores[i].pos))
         if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
@@ -34,16 +37,16 @@ local function searchOre()
         end
     end
     
+    -- Save observation data to ledger
     for i = 1, #blockKeys do
         world[blockKeys[i]] = blocks[blockKeys[i]]
     end
-    
-    print(#world)
-    print(#blockKeys)
 end
 
 local function main()
+    
     searchOre()
+    
     while #ore > 0 do
         minCost = math.huge
         closestOre = nil
@@ -73,7 +76,7 @@ local function main()
     end 
    
    local pos = Movement.position
-   print("2 " , Movement.position.z, Movement.position.w)
+   print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
    Navigation.setAir(pos.x, pos.y, pos.z)
    path = Navigation.findClearPath(world, {x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
    print("3 " , Movement.position.z, Movement.position.w)

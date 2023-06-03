@@ -46,6 +46,18 @@ if not packages[args[2]] then
     return nil
 end
 
+local function readVersion(path, package)
+    if not fs.exists(path .. package.name) then
+        return nil
+    end
+    
+    local f = io.open(path .. package.name)
+    local line = f:read()
+    f:close()
+    line = string.gsub(line, "[%a%p%s]", "") -- Only leave digits
+    return tonumber(line)
+end
+
 local function install(package, target_version)
     target_version = tonumber(target_version) or math.huge
     
@@ -59,18 +71,14 @@ local function install(package, target_version)
         path = "/QLib/packages/"
     end
     
-    if fs.exists(path .. package.name) then
-        local f = io.open(path .. package.name)
-        local line = f:read()
-        f:close()
-        line = string.gsub(line, "[%a%p%s]", "") -- Only leave digits
-        if tonumber(line) then
-            if tonumber(line) >= target_version then
-                io.write("Latest version [".. tonumber(line) .."] of "..package.name.. " already installed\n")
-                return
-            end
+    version = readVersion(path, package)
+    if version then
+        if version >= target_version then
+            io.write("Latest version [".. version .."] of "..package.name.. " already installed\n")
+            return
         end
     end
+    
     fs.delete(path .. package.name)
     local handle = io.open(path .. package.name, "w")
     if handle then
@@ -81,7 +89,12 @@ local function install(package, target_version)
         error("Could not write ".. path .. package.name)
     end
     
-    io.write("Successfully installed " .. package.name .."\n")
+    version = readVersion(path, package)
+    if version then
+        io.write("Successfully installed " .. package.name .. " V."..version.."\n")
+    else 
+        io.write("Successfully installed " .. package.name.."\n")
+    end
     return nil
 end
 

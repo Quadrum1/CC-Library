@@ -41,7 +41,7 @@ end
 function Public.scanSurroundings(Movement, filter)
     
     if not filter then
-        local filter = function (a) 
+        filter = function (a) 
             return false
         end
     end
@@ -69,10 +69,11 @@ function Public.scanSurroundings(Movement, filter)
         Movement.left()
     end
     
-    local pos = Movement.position
+    
     
     success, result = turtle.inspectUp()
     if success then 
+        local pos = Movement.position
         seenStorage[positionIndex(pos.x, pos.y + 1, pos.z)] = Public.setSolid(pos.x, pos.y + 1, pos.z, result)
         table.insert(seenKeys, positionIndex(pos.x, pos.y + 1, pos.z))
         
@@ -82,13 +83,15 @@ function Public.scanSurroundings(Movement, filter)
             table.insert(resultStorage, result)
         end
     else 
+        local pos = Movement.position
         seenStorage[positionIndex(pos.x, pos.y + 1, pos.z)] = Public.setAir(pos.x, pos.y + 1, pos.z)
         table.insert(seenKeys, positionIndex(pos.x, pos.y + 1, pos.z))
     end
     
-    success, result = turtle.inspectDown()
+    local success, result = turtle.inspectDown()
 
     if success then 
+        local pos = Movement.position
         seenStorage[positionIndex(pos.x, pos.y - 1, pos.z)] = Public.setSolid(pos.x, pos.y - 1, pos.z, result)
         table.insert(seenKeys, positionIndex(pos.x, pos.y - 1, pos.z))
         
@@ -98,6 +101,7 @@ function Public.scanSurroundings(Movement, filter)
             table.insert(resultStorage, result)
         end
     else 
+        local pos = Movement.position
         seenStorage[positionIndex(pos.x, pos.y - 1, pos.z)] = Public.setAir(pos.x, pos.y - 1, pos.z)
         table.insert(seenKeys, positionIndex(pos.x, pos.y - 1, pos.z))
     end
