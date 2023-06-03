@@ -25,12 +25,11 @@ local function searchOre()
     local filter = function (result) -- Checks for ore
         return result.tags["c:ores"]
     end
-    print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
-    ores, blocks, blockKeys = Navigation.scanSurroundings(Movement, filter) -- modifies location???
-    print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
+    
+    ores, blocks, blockKeys = Navigation.scanSurroundings(Movement, filter)
+
     
     for i = 1, #ores do
-        print(textutils.serialise(ores[i].pos))
         if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
             table.insert(ore, ores[i])
             ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] = true
@@ -44,8 +43,9 @@ local function searchOre()
 end
 
 local function main()
-    
+    print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
     searchOre()
+    print("p ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
     
     while #ore > 0 do
         minCost = math.huge
@@ -59,16 +59,15 @@ local function main()
             end
         end
         closestOre = table.remove(ore, i)
-        print("c:", textutils.serialise(closestOre.pos))
         print("1 ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
         print(#world)
         local pos = Movement.position
         
-        Navigation.setAir(pos.x, pos.y, pos.z)
+        world[Navigation.positionIndex(pos.x, pos.y, pos.z)] = Navigation.setAir(pos.x, pos.y, pos.z)
         path = Navigation.findClearPath(world, {x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
         print(textutils.serialise(path))
         
-        instructions = Instruction.planDelta(path, pos)
+        instructions = Instruction.planDelta(path, Movement.position.w)
         print(textutils.serialise(instructions))
         Instruction.executeSet(instructions)
         Navigation.setAir(closestOre.pos.x, closestOre.pos.y, closestOre.pos.z)

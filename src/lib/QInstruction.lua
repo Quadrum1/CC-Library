@@ -1,4 +1,4 @@
--- Version: 0.1
+-- Version: 0.2
 local Public = {}
 local Calc = {}
 
@@ -67,11 +67,10 @@ local function decideWay(delta, w)
     return w
 end
 
-function Public.planDelta(deltaTable, startPos)
+function Public.planDelta(deltaTable, w)
     if not deltaTable then return {} end
     if not startPos then return {} end
     Calc.set = {}
-    local w = startPos.w
     
     while #deltaTable > 0 do
         -- Delta only contains a single vertice != 0
