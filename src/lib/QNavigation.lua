@@ -203,6 +203,10 @@ end
 
 function Public.findClearPath(startBlock, endPosition, isGoal)
     -- Make sure to define this
+    if startBlock.x == endPosition.x and startBlock.y == endPosition.y and startBlock.z == endPosition.z then
+        return {}
+    end
+    
     if not isGoal then
         isGoal = function (block)
             return (block.x == endPosition.x and block.y == endPosition.y and block.z == endPosition.z)
