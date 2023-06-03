@@ -68,7 +68,7 @@ function Public.scanSurroundings(Movement, filter)
     for i = 1, 4 do
         success, result = turtle.inspect()
         local pos = Movement.getForward()
-        if success then 
+        if success and not Public.walkable(result) then 
             seenStorage[positionIndex(pos.x, pos.y, pos.z)] = Public.setSolid(pos.x, pos.y, pos.z, result)
             table.insert(seenKeys, positionIndex(pos.x, pos.y, pos.z))
             
@@ -105,7 +105,7 @@ function Public.scanSurroundings(Movement, filter)
     
     local success, result = turtle.inspectDown()
 
-    if success then 
+    if success and not Public.walkable(result) then 
         local pos = Movement.position
         seenStorage[positionIndex(pos.x, pos.y - 1, pos.z)] = Public.setSolid(pos.x, pos.y - 1, pos.z, result)
         table.insert(seenKeys, positionIndex(pos.x, pos.y - 1, pos.z))
