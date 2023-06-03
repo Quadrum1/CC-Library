@@ -1,4 +1,4 @@
--- Version: 0.2
+-- Version: 0.3
 local Public = {}
 local Calc = {}
 
@@ -69,7 +69,7 @@ end
 
 function Public.planDelta(deltaTable, w)
     if not deltaTable then return {} end
-    if not startPos then return {} end
+    if not w then return {} end
     Calc.set = {}
     
     while #deltaTable > 0 do

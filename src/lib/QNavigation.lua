@@ -215,8 +215,6 @@ local function A_Star_Pathfinder(start, goal, isGoal)
                 table.insert(path, 1, delta_position)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
-            -- Construct path here, starting at start to goal.
-            --print("Found a path to "..positionIndex(goal.x, goal.y, goal.z), #delta_position.." turns")
             return path
         end
         -- Find all neighbors
