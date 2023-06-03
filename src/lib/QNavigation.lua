@@ -10,6 +10,13 @@ Calc.allList = {}
 Calc.currentNode = {}
 Calc.goal = {}
 
+Walkable = {
+    ["minecraft:water"] = true,
+    ["minecraft:lava"] = true,
+    ["minecraft:seagrass"] = true,
+    ["minecraft:lava"] = true,
+}
+
 function positionIndex(x,y,z)
     return x .. " " .. y .. " " .. z
 end
@@ -31,6 +38,13 @@ end
 
 function Public.setAir(x,y,z)
     return setBlock(x,y,z,false)
+end
+
+--Returns true if block is walkable without breaking action
+function Public.walkable(block)
+    if not block then return true end
+    if Walkable[block.name] then return true end
+    return false
 end
 
 
@@ -72,7 +86,7 @@ function Public.scanSurroundings(Movement, filter)
     
     
     success, result = turtle.inspectUp()
-    if success then 
+    if success and not Public.walkable(result) then 
         local pos = Movement.position
         seenStorage[positionIndex(pos.x, pos.y + 1, pos.z)] = Public.setSolid(pos.x, pos.y + 1, pos.z, result)
         table.insert(seenKeys, positionIndex(pos.x, pos.y + 1, pos.z))
