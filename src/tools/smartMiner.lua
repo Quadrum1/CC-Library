@@ -14,14 +14,12 @@ Movement = require("QLib/packages/QMovement")
 Instruction = require("QLib/packages/QInstruction")
 Navigation = require("QLib/packages/QNavigation")
 
-Instruction.QInstructionCalls = {
-        ["up"] = Movement.up,
-        ["down"] = Movement.down,
-        ["forward"] = Movement.forward,
-        ["backwards"] = Movement.backwards,
-        ["left"] = Movement.left,
-        ["right"] = Movement.right
-}
+Instruction.QInstructionCalls.up = Movement.up
+Instruction.QInstructionCalls.down = Movement.down
+Instruction.QInstructionCalls.forward = Movement.forward
+Instruction.QInstructionCalls.backwards = Movement.backwards
+Instruction.QInstructionCalls.left = Movement.left
+Instruction.QInstructionCalls.right = Movement.right
 
 local function searchOre()
     local filter = function (result) -- Checks for ore
@@ -29,9 +27,9 @@ local function searchOre()
     end
     ores = Navigation.scanSurroundings(Movement, filter)
     for i = 1, #ores do
+        --print(textutils.serialise(ores[i].pos))
         if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
             table.insert(ore, ores[i])
-            print(textutils.serialise(ores[i].pos))
             ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] = true
         end
     end
@@ -42,7 +40,7 @@ local function main()
     while #ore > 0 do
         minCost = math.huge
         closestOre = nil
-        pos = Movement.position
+        local pos = Movement.position
         for i = 1, #ore do
             cost = Navigation.distanceCost(pos, ore[i].pos)
             if cost < minCost then
@@ -51,6 +49,7 @@ local function main()
             end
         end
         closestOre = table.remove(ore, i)
+        print("1 ", Movement.position.z, Movement.position.w)
         
         Navigation.setAir(pos.x, pos.y, pos.z)
         path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
@@ -63,8 +62,12 @@ local function main()
     end 
    
    pos = Movement.position
+   print("2 " , Movement.position.z, Movement.position.w)
    path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
-   Instruction.executeSet(Instruction.planDelta(path))
+   print("3 " , Movement.position.z, Movement.position.w)
+   Instruction.executeSet(Instruction.planDelta(path, pos))
+   print("4 " , Movement.position.z, Movement.position.w) -- This is wrong..., why?
+   -- Direction in which turtle is pointing is remembered wrong?
 end
 
 main()

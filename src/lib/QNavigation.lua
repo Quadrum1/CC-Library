@@ -181,15 +181,15 @@ local function A_Star_Pathfinder(start, goal, isGoal)
             while Calc.currentNode and not (Calc.currentNode.x == start.x and Calc.currentNode.y == start.y and Calc.currentNode.z == start.z) do
                 -- Calc path to Calc.currentNode from Calc.currentNode.predecessor
                 delta_position = {
-                    x = Calc.currentNode.x - Public.blockStorage[Calc.currentNode.predecessor].x,
-                    y = Calc.currentNode.y - Public.blockStorage[Calc.currentNode.predecessor].y,
-                    z = Calc.currentNode.z - Public.blockStorage[Calc.currentNode.predecessor].z
+                    x = Calc.currentNode.x - Calc.openList[Calc.currentNode.predecessor].x,
+                    y = Calc.currentNode.y - Calc.openList[Calc.currentNode.predecessor].y,
+                    z = Calc.currentNode.z - Calc.openList[Calc.currentNode.predecessor].z
                 }
                 table.insert(path, 1, delta_position)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
-            print("Found a path to "..positionIndex(goal.x, goal.y, goal.z))
+            print("Found a path to "..positionIndex(goal.x, goal.y, goal.z), #delta_position.." turns")
             return path
         end
         -- Find all neighbors
