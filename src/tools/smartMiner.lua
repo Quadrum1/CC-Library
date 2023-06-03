@@ -45,16 +45,26 @@ end
 local function main()
     searchOre()
     
+
+    -- TODO prioritise closest Ore by direction -> Less turning
     while #ore > 0 do
-        minCost = math.huge
-        closestOre = nil
+        local minCost = math.huge
+        local closestOre = 1
         local pos = Movement.position
+        
+        local fwd = Movement.getForward()
         for i = 1, #ore do
             cost = Navigation.distanceCost(pos, ore[i].pos)
-            if cost <= minCost then
+            
+            if ore[i].pos.x == fwd.x and ore[i].pos.y == fwd.y and ore[i].pos.z == fwd.z then
+                cost = -1
+            end
+            
+            if cost < minCost then
+                print(cost, minCost)
                 minCost = cost
                 closestOre = i
-            end
+            end            
         end
         closestOre = table.remove(ore, i)
         print(#ore)

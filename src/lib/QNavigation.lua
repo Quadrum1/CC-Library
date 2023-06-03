@@ -80,7 +80,7 @@ function Public.scanSurroundings(Movement, filter)
             seenStorage[positionIndex(pos.x, pos.y, pos.z)] = Public.setAir(pos.x, pos.y, pos.z)
             table.insert(seenKeys, positionIndex(pos.x, pos.y, pos.z))
         end
-        Movement.left()
+        Movement.right()
     end
     
     
