@@ -51,30 +51,35 @@ local function main()
         local pos = Movement.position
         for i = 1, #ore do
             cost = Navigation.distanceCost(pos, ore[i].pos)
-            if cost < minCost then
+            if cost <= minCost then
                 minCost = cost
                 closestOre = i
             end
         end
         closestOre = table.remove(ore, i)
-
+        print(#ore)
+        
         local pos = Movement.position
         
         world[Navigation.positionIndex(pos.x, pos.y, pos.z)] = Navigation.setAir(pos.x, pos.y, pos.z)
         path = Navigation.findClearPath(world, {x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
+        if not path then
+            print("No path.")
+        end
         
-        print(textutils.serialise(path))
         instructions = Instruction.planDelta(path, Movement.position.w)
-        print(textutils.serialise(instructions))
         Instruction.executeSet(instructions)
-        Navigation.setAir(closestOre.pos.x, closestOre.pos.y, closestOre.pos.z)
+        
+        
+        seenStorage[positionIndex(pos.x, pos.y, pos.z)] = Public.setAir(pos.x, pos.y, pos.z)
+        world[Navigation.positionIndex(closestOre.pos.x, closestOre.pos.y, closestOre.pos.z)] = Navigation.setAir(closestOre.pos.x, closestOre.pos.y, closestOre.pos.z)
         searchOre()
     end 
    
    local pos = Movement.position
-   Navigation.setAir(pos.x, pos.y, pos.z)
+   world[Navigation.positionIndex(pos.x, pos.y, pos.z)] = Navigation.setAir(pos.x, pos.y, pos.z)
    path = Navigation.findClearPath(world, {x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
-   Instruction.executeSet(Instruction.planDelta(path, pos))
+   Instruction.executeSet(Instruction.planDelta(path, Movement.position.w))
 end
 
 main()
