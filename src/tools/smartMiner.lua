@@ -35,10 +35,11 @@ local function searchOre()
     end
     
     for i = 1, #blockKeys do
-        world[blockKeys[i]] = blocks[blockKeys[i]
+        world[blockKeys[i]] = blocks[blockKeys[i]]
     end
     
-    print(#Navigation.blockStorage)
+    print(#world)
+    print(#blockKeys)
 end
 
 local function main()
@@ -57,7 +58,7 @@ local function main()
         closestOre = table.remove(ore, i)
         print("c:", textutils.serialise(closestOre.pos))
         print("1 ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
-        print(#Navigation.blockStorage)
+        print(#world)
         local pos = Movement.position
         
         Navigation.setAir(pos.x, pos.y, pos.z)

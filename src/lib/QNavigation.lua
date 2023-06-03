@@ -33,6 +33,11 @@ function Public.setAir(x,y,z)
     return setBlock(x,y,z,false)
 end
 
+
+
+-- Returns 1. set of blocks matching filter function
+-- 2. Every scanned block in a dictionary keyed by position.
+-- 3. set of keys matching 2nd return value
 function Public.scanSurroundings(Movement, filter)
     
     if not filter then
