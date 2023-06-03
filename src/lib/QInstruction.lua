@@ -25,6 +25,7 @@ end
 
 
 local function decideWay(delta, startPos)
+    local w = startPos.w
     if delta.y == 1 then
         table.insert(Calc.set, "up")
     end
@@ -33,46 +34,48 @@ local function decideWay(delta, startPos)
     end
     
     if delta.x == 1 then
-        while startPos.w ~= 1 do
+        while w ~= 1 do
             table.insert(Calc.set, "right")
-            startPos.w = (startPos.w + 1) % 4
+            w = (w + 1) % 4
         end
         table.insert(Calc.set, "forward")
     end
     if delta.x == -1 then
-        while startPos.w ~= 3 do
+        while w ~= 3 do
             table.insert(Calc.set, "right")
-            startPos.w = (startPos.w + 1) % 4
+            w = (w + 1) % 4
         end
         table.insert(Calc.set, "forward")
     end
     
     if delta.z == 1 then
-        while startPos.w ~= 2 do
+        while w ~= 2 do
             table.insert(Calc.set, "right")
-            startPos.w = (startPos.w + 1) % 4
+            w = (w + 1) % 4
         end
         table.insert(Calc.set, "forward")
     end
     if delta.z == -1 then
-        while startPos.w ~= 0 do
+        while w ~= 0 do
             table.insert(Calc.set, "right")
-            startPos.w = (startPos.w + 1) % 4
+            w = (w + 1) % 4
         end
         table.insert(Calc.set, "forward")
     end
     
-    return startPos
+    return w
 end
 
 function Public.planDelta(deltaTable, startPos)
     if not deltaTable then return {} end
     if not startPos then return {} end
     Calc.set = {}
+    local w = startPos.w
+    
     while #deltaTable > 0 do
         -- Delta only contains a single vertice != 0
         delta = table.remove(deltaTable, 1)
-        startPos = decideWay(delta,startPos)
+        w = decideWay(delta,w)
     end
     return Calc.set
 end

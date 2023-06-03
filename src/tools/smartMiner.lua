@@ -63,6 +63,7 @@ local function main()
    
    pos = Movement.position
    print("2 " , Movement.position.z, Movement.position.w)
+   Navigation.setAir(pos.x, pos.y, pos.z)
    path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
    print("3 " , Movement.position.z, Movement.position.w)
    Instruction.executeSet(Instruction.planDelta(path, pos))

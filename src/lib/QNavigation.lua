@@ -214,6 +214,7 @@ function Public.findClearPath(startBlock, endPosition, isGoal)
     end
     -- Can define more in-depth function here to allow multi-targetting
     -- For example, can set end position as nearest ore block, or define goal as any ore block
+    Public.setAir(endPosition.x, endPosition.y, endPosition.z)
     return A_Star_Pathfinder(startBlock, endPosition, isGoal)
 end
 
