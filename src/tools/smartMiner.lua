@@ -61,7 +61,7 @@ local function main()
         searchOre()
     end 
    
-   pos = Movement.position
+   local pos = Movement.position
    print("2 " , Movement.position.z, Movement.position.w)
    Navigation.setAir(pos.x, pos.y, pos.z)
    path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
