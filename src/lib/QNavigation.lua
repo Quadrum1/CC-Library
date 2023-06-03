@@ -77,7 +77,8 @@ function Public.scanSurroundings(Movement, filter)
         seenStorage[positionIndex(pos.x, pos.y + 1, pos.z)] = Public.setSolid(pos.x, pos.y + 1, pos.z, result)
         table.insert(seenKeys, positionIndex(pos.x, pos.y + 1, pos.z))
         
-        result.pos = pos
+        result.pos = {}
+        for k, v in pairs(Movement.position) do result.pos[k] = v end
         result.pos.y = result.pos.y + 1
         if filter(result) then
             table.insert(resultStorage, result)
@@ -95,7 +96,8 @@ function Public.scanSurroundings(Movement, filter)
         seenStorage[positionIndex(pos.x, pos.y - 1, pos.z)] = Public.setSolid(pos.x, pos.y - 1, pos.z, result)
         table.insert(seenKeys, positionIndex(pos.x, pos.y - 1, pos.z))
         
-        result.pos = pos
+        result.pos = {}
+        for k, v in pairs(Movement.position) do result.pos[k] = v end
         result.pos.y = result.pos.y - 1
         if filter(result) then
             table.insert(resultStorage, result)
