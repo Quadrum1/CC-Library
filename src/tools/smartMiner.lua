@@ -1,7 +1,7 @@
 
 ore = {}
 ore_positions = {}
-
+world = {}
 
 local function ensureDependencies()
     shell.run("qmanager install QMovement")
@@ -25,14 +25,20 @@ local function searchOre()
     local filter = function (result) -- Checks for ore
         return result.tags["c:ores"]
     end
-    ores = Navigation.scanSurroundings(Movement, filter)
+    ores, blocks, blockKeys = Navigation.scanSurroundings(Movement, filter)
     for i = 1, #ores do
-        --print(textutils.serialise(ores[i].pos))
+        print(textutils.serialise(ores[i].pos))
         if not ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] then
             table.insert(ore, ores[i])
             ore_positions[Navigation.positionIndex(ores[i].pos.x, ores[i].pos.y, ores[i].pos.z)] = true
         end
     end
+    
+    for i = 1, #blockKeys do
+        world[blockKeys[i]] = blocks[blockKeys[i]
+    end
+    
+    print(#Navigation.blockStorage)
 end
 
 local function main()
@@ -49,11 +55,15 @@ local function main()
             end
         end
         closestOre = table.remove(ore, i)
-        print("1 ", Movement.position.z, Movement.position.w)
+        print("c:", textutils.serialise(closestOre.pos))
+        print("1 ", Movement.position.x, Movement.position.y,Movement.position.z, Movement.position.w)
+        print(#Navigation.blockStorage)
+        local pos = Movement.position
         
         Navigation.setAir(pos.x, pos.y, pos.z)
-        path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
+        path = Navigation.findClearPath(world, {x=pos.x, y=pos.y, z=pos.z}, {x=closestOre.pos.x, y=closestOre.pos.y, z=closestOre.pos.z})
         print(textutils.serialise(path))
+        
         instructions = Instruction.planDelta(path, pos)
         print(textutils.serialise(instructions))
         Instruction.executeSet(instructions)
@@ -64,7 +74,7 @@ local function main()
    local pos = Movement.position
    print("2 " , Movement.position.z, Movement.position.w)
    Navigation.setAir(pos.x, pos.y, pos.z)
-   path = Navigation.findClearPath({x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
+   path = Navigation.findClearPath(world, {x=pos.x, y=pos.y, z=pos.z}, {x=0, y=0, z=0})
    print("3 " , Movement.position.z, Movement.position.w)
    Instruction.executeSet(Instruction.planDelta(path, pos))
    print("4 " , Movement.position.z, Movement.position.w) -- This is wrong..., why?

@@ -3,6 +3,7 @@ Public = {}
 
 Public.blockStorage = {}
 Calc = {}
+Calc.worldList = {}
 Calc.openList = {}
 Calc.closedList = {}
 Calc.allList = {}
@@ -14,7 +15,7 @@ function positionIndex(x,y,z)
 end
 
 local function setBlock(x,y,z,solid, data)
-    Public.blockStorage[positionIndex(x,y,z)] = {
+    return {
         x = x,
         y = y,
         z = z,
@@ -23,35 +24,42 @@ local function setBlock(x,y,z,solid, data)
     }
 end
 
-function Public.setSolid(x,y,z)
-    setBlock(x,y,z,true)
+function Public.setSolid(x,y,z, data)
+    return setBlock(x,y,z,true, data)
 end
 
 
 function Public.setAir(x,y,z)
-    setBlock(x,y,z,false)
+    return setBlock(x,y,z,false)
 end
 
-
 function Public.scanSurroundings(Movement, filter)
+    
     if not filter then
         local filter = function (a) 
             return false
         end
     end
     
+    
     resultStorage = {}
+    seenStorage = {}
+    seenKeys = {}
+    
     for i = 1, 4 do
         success, result = turtle.inspect()
         local pos = Movement.getForward()
         if success then 
+            seenStorage[positionIndex(pos.x, pos.y, pos.z)] = Public.setSolid(pos.x, pos.y, pos.z, result)
+            table.insert(seenKeys, positionIndex(pos.x, pos.y, pos.z))
+            
             result.pos = pos
             if filter(result) then
                 table.insert(resultStorage, result)
             end
-            Public.setSolid(pos.x, pos.y, pos.z)
         else 
-            Public.setAir(pos.x, pos.y, pos.z)
+            seenStorage[positionIndex(pos.x, pos.y, pos.z)] = Public.setAir(pos.x, pos.y, pos.z)
+            table.insert(seenKeys, positionIndex(pos.x, pos.y, pos.z))
         end
         Movement.left()
     end
@@ -60,37 +68,45 @@ function Public.scanSurroundings(Movement, filter)
     
     success, result = turtle.inspectUp()
     if success then 
+        seenStorage[positionIndex(pos.x, pos.y + 1, pos.z)] = Public.setSolid(pos.x, pos.y + 1, pos.z, result)
+        table.insert(seenKeys, positionIndex(pos.x, pos.y + 1, pos.z))
+        
         result.pos = pos
         result.pos.y = result.pos.y + 1
         if filter(result) then
             table.insert(resultStorage, result)
         end
-        Public.setSolid(pos.x, pos.y + 1, pos.z)
     else 
-        Public.setAir(pos.x, pos.y + 1, pos.z)
+        seenStorage[positionIndex(pos.x, pos.y + 1, pos.z)] = Public.setAir(pos.x, pos.y + 1, pos.z)
+        table.insert(seenKeys, positionIndex(pos.x, pos.y + 1, pos.z))
     end
     
     success, result = turtle.inspectDown()
 
     if success then 
+        seenStorage[positionIndex(pos.x, pos.y - 1, pos.z)] = Public.setSolid(pos.x, pos.y - 1, pos.z, result)
+        table.insert(seenKeys, positionIndex(pos.x, pos.y - 1, pos.z))
+        
         result.pos = pos
         result.pos.y = result.pos.y - 1
         if filter(result) then
             table.insert(resultStorage, result)
         end
-        Public.setSolid(pos.x, pos.y - 1, pos.z)
     else 
-        Public.setAir(pos.x, pos.y - 1, pos.z)
+        seenStorage[positionIndex(pos.x, pos.y - 1, pos.z)] = Public.setAir(pos.x, pos.y - 1, pos.z)
+        table.insert(seenKeys, positionIndex(pos.x, pos.y - 1, pos.z))
     end
     
-    return resultStorage
+    return resultStorage, seenStorage, seenKeys
 end
 
 function Public.basicScan(Movement)
-    Public.scanSurroundings(Movement)
+    _, seenStorage, seenKeys = Public.scanSurroundings(Movement)
     
     pos = Movement.position
-    Public.setAir(pos.x, pos.y, pos.z)
+    seenStorage[positionIndex(pos.x, pos.y, pos.z)] = Public.setAir(pos.x, pos.y, pos.z)
+    table.insert(seenKeys, positionIndex(pos.x, pos.y, pos.z))
+    return seenStorage, seenKeys
 end
 
 function Public.distanceCost(position1, position2)
@@ -103,8 +119,8 @@ local function successorLoop(delta)
     y = Calc.currentNode.y + delta[2]
     z = Calc.currentNode.z + delta[3]
     
-    if not Public.blockStorage[positionIndex(x,y,z)] then return end
-    if Public.blockStorage[positionIndex(x,y,z)].solid then return end
+    if not Calc.worldList[positionIndex(x,y,z)] then return end
+    if Calc.worldList[positionIndex(x,y,z)].solid then return end
     if Calc.closedList[positionIndex(x,y,z)] then return end
         
     tentative_g = Calc.currentNode.g + 1
@@ -118,7 +134,7 @@ local function successorLoop(delta)
     successor.g = tentative_g
     successor.f = tentative_g + Public.distanceCost(successor, Calc.goal)
     
-    successor.data = Public.blockStorage[positionIndex(x,y,z)].data
+    successor.data = Calc.worldList[positionIndex(x,y,z)].data
     
     Calc.openList[successor.predecessor].successor = positionIndex(x,y,z)
     Calc.openList[positionIndex(x,y,z)] = successor
@@ -155,8 +171,8 @@ end
 local function A_Star_Pathfinder(start, goal, isGoal)
     -- Implements A* Algorithm, refer to Wikipedia
     
-    Public.blockStorage[positionIndex(start.x, start.y, start.z)].solid = false
-    Public.blockStorage[positionIndex(goal.x, goal.y, goal.z)].solid = false
+    Calc.worldList[positionIndex(start.x, start.y, start.z)].solid = false
+    Calc.worldList[positionIndex(goal.x, goal.y, goal.z)].solid = false
     
     Calc.goal = goal
     
@@ -189,7 +205,7 @@ local function A_Star_Pathfinder(start, goal, isGoal)
                 Calc.currentNode = Calc.openList[Calc.currentNode.predecessor]
             end
             -- Construct path here, starting at start to goal.
-            print("Found a path to "..positionIndex(goal.x, goal.y, goal.z), #delta_position.." turns")
+            --print("Found a path to "..positionIndex(goal.x, goal.y, goal.z), #delta_position.." turns")
             return path
         end
         -- Find all neighbors
@@ -197,11 +213,11 @@ local function A_Star_Pathfinder(start, goal, isGoal)
         Calc.closedList[positionIndex(Calc.currentNode.x,Calc.currentNode.y,Calc.currentNode.z)] = Calc.currentNode
     end
 
-    print("Did not find a path.")
+    --print("Did not find a path.")
     return nil
 end
 
-function Public.findClearPath(startBlock, endPosition, isGoal)
+function Public.findClearPath(worldList, startBlock, endPosition, isGoal)
     -- Make sure to define this
     if startBlock.x == endPosition.x and startBlock.y == endPosition.y and startBlock.z == endPosition.z then
         return {}
@@ -212,6 +228,9 @@ function Public.findClearPath(startBlock, endPosition, isGoal)
             return (block.x == endPosition.x and block.y == endPosition.y and block.z == endPosition.z)
         end 
     end
+    
+    Calc.worldList = worldList
+    
     -- Can define more in-depth function here to allow multi-targetting
     -- For example, can set end position as nearest ore block, or define goal as any ore block
     Public.setAir(endPosition.x, endPosition.y, endPosition.z)

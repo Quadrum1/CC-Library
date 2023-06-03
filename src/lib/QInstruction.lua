@@ -25,6 +25,11 @@ end
 
 
 local function decideWay(delta, startPos)
+    if not delta then return {} end
+    if not startPos then
+        startPos = {w = 0}
+    end
+        
     local w = startPos.w
     if delta.y == 1 then
         table.insert(Calc.set, "up")
